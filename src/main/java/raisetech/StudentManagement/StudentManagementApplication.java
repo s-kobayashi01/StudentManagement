@@ -15,6 +15,7 @@ public class StudentManagementApplication {
 	}
 
   @GetMapping("/liverpoolFC")
-  public String liverpoolFC() {return "You'll Never Walk Alone";
+  public String liverpoolFC() {
+    return "You'll Never Walk Alone";
   }
 }
