@@ -14,8 +14,8 @@ public class StudentManagementApplication {
 		SpringApplication.run(StudentManagementApplication.class, args);
 	}
 
-  @GetMapping("/liverpool")
-  public String liverpool() {
+  @GetMapping("/liverpoolFC")
+  public String liverpoolFC() {
     return "You'll Never Walk Alone";
   }
 }
