@@ -1,4 +1,4 @@
-package raisetech.StudentManagement;
+package raisetech.studentmanagement;
 
 public class Student {
     private String name;
