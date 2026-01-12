@@ -7,23 +7,25 @@ import raisetech.studentmanagement.domain.StudentDetail;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class StudentConverter {
     public List<StudentDetail> convertStudentDetails(List<Student> students, List<StudentsCourses> studentsCourses) {
         List<StudentDetail> studentDetails = new ArrayList<>();
-        students.forEach(student -> {
+        for (Student student : students) {
             StudentDetail studentDetail = new StudentDetail();
             studentDetail.setStudent(student);
 
-            List<StudentsCourses> convertStudentCourses = studentsCourses.stream()
-                    .filter(studentsCourse -> student.getId().equals(studentsCourse.getStudentsId()))
-                    .collect(Collectors.toList());
+            List<StudentsCourses> convertStudentCourses = new ArrayList<>();
+            for (StudentsCourses studentsCourse : studentsCourses) {
+                if (student.getId().equals(studentsCourse.getStudentsId())) {
+                    convertStudentCourses.add(studentsCourse);
+                }
+            }
 
             studentDetail.setStudentsCourses(convertStudentCourses);
             studentDetails.add(studentDetail);
-        });
+        }
         return studentDetails;
     }
 }
