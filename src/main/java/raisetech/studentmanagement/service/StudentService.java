@@ -5,8 +5,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import raisetech.studentmanagement.data.Student;
 import raisetech.studentmanagement.data.StudentsCourses;
+import raisetech.studentmanagement.domain.StudentDetail;
 import raisetech.studentmanagement.repository.StudentRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -30,16 +32,26 @@ public class StudentService {
     }
 
     @Transactional
-    public void create(Student student, List<StudentsCourses> studentsCourses) {
-        repository.insertStudent(student);
+    public void registerStudent(StudentDetail studentDetail) {
+        repository.registerStudent(studentDetail.getStudent());
 
-        logger.info("inserted id={}", student.getId());
+        logger.info("inserted id={}", studentDetail.getStudent().getId());
 
 
-        for (StudentsCourses sc : studentsCourses) {
-            sc.setStudentsId(student.getId());
-            repository.insertStudentsCourses(sc);
+        for (StudentsCourses studentsCourses : studentDetail.getStudentsCourses()) {
+            studentsCourses.setStudentsId(studentDetail.getStudent().getId());
+            studentsCourses.setCourseStartAt(LocalDateTime.now());
+            studentsCourses.setCourseEndAt(LocalDateTime.now().plusYears(1));
+            repository.registerStudentsCourses(studentsCourses);
         }
 
+    }
+
+    public Student searchStudent(Integer id) {
+        return repository.student(id);
+    }
+
+    public int updateStudent(Student student) {
+        return repository.updateStudent(student);
     }
 }

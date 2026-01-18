@@ -7,6 +7,7 @@
 <h1>受講生一覧</h1>
 <table border="1">
     <thead>
+    <!--　tr 「Table Row」の略　表（table）の行を定義するためのタグ -->
     <tr>
         <th>ID</th>
         <th>名前</th>
@@ -21,17 +22,22 @@
     </tr>
     </thead>
     <tbody>
+    <!--　th 「Table Header」の略　「表の見出し」を作る -->
     <tr th:each="studentDetail : ${studentList}">
+        <!--　td　「table data」の略 表の中でデータを格納するセルを定義する -->
         <td th:text="${studentDetail.student.id}">A00001</td>
-        <td th:text="${studentDetail.student.name}">小林聖</td>
-        <td th:text="${studentDetail.student.kanaName}">ｺﾊﾞﾔｼｻﾄﾙ</td>
-        <td th:text="${studentDetail.student.nickName}">こばやし</td>
-        <td th:text="${studentDetail.student.email}">kobayashi@gmail.com</td>
-        <td th:text="${studentDetail.student.area}">東京都</td>
-        <td th:text="${studentDetail.student.age}">20</td>
-        <td th:text="${studentDetail.student.gender}">男</td>
-        <td th:text="${studentDetail.student.job}">無職</td>
-        <td th:text="${studentDetail.student.remark}">特になし</td>
+        <!--　href a(アンカー)タグの属性の一つ　リンク先を指定する -->
+        <!--　@ の意味　Thymeleafのリンク式を示す　@{...} の中でURLを組み立てると「アプリケーションのコンテキストパスを考慮」「エスケープ処理」「パラメータ差し込み」を自動でやってくれます。単なる文字列ではなく Thymeleaf が評価して正しいURLに変換します。 -->
+        <td><a th:href="@{/students/{id}/edit(id=${studentDetail.student.id})}"
+               th:text="${studentDetail.student.name}"></a></td>
+        <td th:text="${studentDetail.student.kanaName}"></td>
+        <td th:text="${studentDetail.student.nickName}"></td>
+        <td th:text="${studentDetail.student.email}"></td>
+        <td th:text="${studentDetail.student.area}"></td>
+        <td th:text="${studentDetail.student.age}"></td>
+        <td th:text="${studentDetail.student.gender}"></td>
+        <td th:text="${studentDetail.student.job}"></td>
+        <td th:text="${studentDetail.student.remark}"></td>
     </tr>
     </tbody>
 </table>
