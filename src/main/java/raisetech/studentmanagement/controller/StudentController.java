@@ -1,11 +1,14 @@
 package raisetech.studentmanagement.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import raisetech.studentmanagement.controller.converter.StudentConverter;
 import raisetech.studentmanagement.data.Student;
@@ -13,7 +16,7 @@ import raisetech.studentmanagement.data.StudentsCourses;
 import raisetech.studentmanagement.domain.StudentDetail;
 import raisetech.studentmanagement.service.StudentService;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -21,6 +24,7 @@ public class StudentController {
 
     private StudentService service;
     private StudentConverter converter;
+    private static final Logger logger = LoggerFactory.getLogger(StudentController.class);
 
     @Autowired
     public StudentController(StudentService service, StudentConverter converter) {
@@ -44,10 +48,10 @@ public class StudentController {
 
     @GetMapping("/newStudent")
     public String newStudent(Model model) {
-        StudentDetail detail = new StudentDetail();
-        detail.setStudentsCourses(new ArrayList<>());
-        detail.getStudentsCourses().add(new StudentsCourses());
-        model.addAttribute("studentDetail", detail);
+        StudentDetail studentDetail = new StudentDetail();
+        studentDetail.setStudentsCourses(Arrays.asList(new StudentsCourses()));
+        //studentDetail.getStudentsCourses().add(new StudentsCourses());
+        model.addAttribute("studentDetail", studentDetail);
         return "registerStudent";
     }
 
@@ -58,17 +62,22 @@ public class StudentController {
             return "registerStudent";
         }
 
-        service.create(studentDetail.getStudent(), studentDetail.getStudentsCourses());
-
-
-        //model.addAttribute("name", studentDetail.getStudent().getName());
-
-
-        //List<Student> student = new ArrayList<>();
-        //List<StudentDetail> studentDetails = new ArrayList<>();
-
-        //studentDetail.setStudent(student.get(name));
-        //System.out.println(studentDetail.getStudent().getName() + "さんが新規受講生として登録されました。");
+        service.registerStudent(studentDetail);
         return "redirect:/studentList";
     }
+
+    @GetMapping("/students/{id}/edit")
+    public String changeStudent(@PathVariable("id") Integer id, Model model) {
+        Student student = service.searchStudent(id);
+        model.addAttribute("student", student);
+        return "updateStudent";
+    }
+
+    @PostMapping("/updateStudent")
+    public String updateStudent(@ModelAttribute("student") Student student) {
+        service.updateStudent(student);
+        logger.info("update id={}", student.getId());
+        return "redirect:/studentList";
+    }
+
 }
