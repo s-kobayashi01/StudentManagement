@@ -46,11 +46,17 @@ public class StudentController {
         return "studentsCourseList";
     }
 
+    @GetMapping("/student/{id}")
+    public String getStudent(@PathVariable Integer id, Model model) {
+        StudentDetail studentDetail = service.searchStudent(id);
+        model.addAttribute("studentDetail", studentDetail);
+        return "updateStudent";
+    }
+
     @GetMapping("/newStudent")
     public String newStudent(Model model) {
         StudentDetail studentDetail = new StudentDetail();
         studentDetail.setStudentsCourses(Arrays.asList(new StudentsCourses()));
-        //studentDetail.getStudentsCourses().add(new StudentsCourses());
         model.addAttribute("studentDetail", studentDetail);
         return "registerStudent";
     }
@@ -66,17 +72,15 @@ public class StudentController {
         return "redirect:/studentList";
     }
 
-    @GetMapping("/students/{id}/edit")
-    public String changeStudent(@PathVariable("id") Integer id, Model model) {
-        Student student = service.searchStudent(id);
-        model.addAttribute("student", student);
-        return "updateStudent";
-    }
 
     @PostMapping("/updateStudent")
-    public String updateStudent(@ModelAttribute("student") Student student) {
-        service.updateStudent(student);
-        logger.info("update id={}", student.getId());
+    public String updateStudent(@ModelAttribute("student") StudentDetail studentDetail, BindingResult result) {
+        if (result.hasErrors()) {
+            return "registerStudent";
+        }
+
+        service.updateStudent(studentDetail);
+        logger.info("update id={}", studentDetail.getStudent().getId());
         return "redirect:/studentList";
     }
 

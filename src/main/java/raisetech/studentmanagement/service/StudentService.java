@@ -28,7 +28,7 @@ public class StudentService {
     }
 
     public List<StudentsCourses> searchStudentsCourseList() {
-        return repository.searchCourses();
+        return repository.searchStudentCoursesList();
     }
 
     @Transactional
@@ -47,11 +47,21 @@ public class StudentService {
 
     }
 
-    public Student searchStudent(Integer id) {
-        return repository.student(id);
+    public StudentDetail searchStudent(Integer id) {
+        Student student = repository.SearchStudent(id);
+        List<StudentsCourses> studentsCourses = repository.SearchStudentCourses(student.getId());
+        StudentDetail studentDetail = new StudentDetail();
+        studentDetail.setStudent(student);
+        studentDetail.setStudentsCourses(studentsCourses);
+        return studentDetail;
+
     }
 
-    public int updateStudent(Student student) {
-        return repository.updateStudent(student);
+    public void updateStudent(StudentDetail studentDetail) {
+
+        repository.updateStudent(studentDetail.getStudent());
+        for (StudentsCourses studentsCourses : studentDetail.getStudentsCourses()) {
+            repository.updateStudentsCourses(studentsCourses);
+        }
     }
 }
