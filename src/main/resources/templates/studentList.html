@@ -28,7 +28,7 @@
         <td th:text="${studentDetail.student.id}">A00001</td>
         <!--　href a(アンカー)タグの属性の一つ　リンク先を指定する -->
         <!--　@ の意味　Thymeleafのリンク式を示す　@{...} の中でURLを組み立てると「アプリケーションのコンテキストパスを考慮」「エスケープ処理」「パラメータ差し込み」を自動でやってくれます。単なる文字列ではなく Thymeleaf が評価して正しいURLに変換します。 -->
-        <td><a th:href="@{/students/{id}/edit(id=${studentDetail.student.id})}"
+        <td><a th:href="@{/student/{id}(id=${studentDetail.student.id})}"
                th:text="${studentDetail.student.name}"></a></td>
         <td th:text="${studentDetail.student.kanaName}"></td>
         <td th:text="${studentDetail.student.nickName}"></td>
