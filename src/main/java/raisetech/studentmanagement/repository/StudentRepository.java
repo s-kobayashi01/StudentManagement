@@ -12,13 +12,13 @@ import java.util.List;
 @Mapper
 public interface StudentRepository {
 
-    @Select("SELECT id, name, kana_name, nick_name, email, area, gender, job, remark, is_deleted AS deleted FROM students")
+    @Select("SELECT id, name, kana_name, nick_name, email, area, age, gender, job, remark, is_deleted AS deleted FROM students")
     List<Student> search();
 
     @Select("SELECT * FROM students_courses")
     List<StudentsCourses> searchStudentCoursesList();
 
-    @Select("SELECT id, name, kana_name, nick_name, email, area, gender, job, remark, is_deleted AS deleted FROM students WHERE id = #{id}")
+    @Select("SELECT id, name, kana_name, nick_name, email, area, age, gender, job, remark, is_deleted AS deleted FROM students WHERE id = #{id}")
     Student SearchStudent(Integer id);
 
     @Select("SELECT * FROM students_courses WHERE students_id = #{studentsId}")
