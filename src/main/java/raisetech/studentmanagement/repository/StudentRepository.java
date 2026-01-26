@@ -12,19 +12,19 @@ import java.util.List;
 @Mapper
 public interface StudentRepository {
 
-    @Select("SELECT * FROM students WHERE deleted = false")
+    @Select("SELECT id, name, kana_name, nick_name, email, area, age, gender, job, remark, is_deleted AS deleted FROM students")
     List<Student> search();
 
     @Select("SELECT * FROM students_courses")
     List<StudentsCourses> searchStudentCoursesList();
 
-    @Select("SELECT * FROM students WHERE id = #{id}")
+    @Select("SELECT id, name, kana_name, nick_name, email, area, age, gender, job, remark, is_deleted AS deleted FROM students WHERE id = #{id}")
     Student SearchStudent(Integer id);
 
     @Select("SELECT * FROM students_courses WHERE students_id = #{studentsId}")
     List<StudentsCourses> SearchStudentCourses(@Param("studentsId") Integer id);
 
-    @Insert("INSERT INTO students (name, kana_name, nick_name, email, area, age, gender, remark, deleted, job) " +
+    @Insert("INSERT INTO students (name, kana_name, nick_name, email, area, age, gender, remark, is_deleted, job) " +
             "values (#{name}, #{kanaName}, #{nickName}, #{email}, #{area}, #{age}, #{gender}, #{remark}, false, #{job})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void registerStudent(Student student);
@@ -37,7 +37,7 @@ public interface StudentRepository {
 
 
     @Update("UPDATE students SET name = #{name}, kana_name = #{kanaName}, nick_name = #{nickName}, email = #{email}, " +
-            "area = #{area}, age = #{age}, gender = #{gender}, remark = #{remark}, deleted = #{deleted}, job = #{job} WHERE id = #{id}")
+            "area = #{area}, age = #{age}, gender = #{gender}, remark = #{remark}, is_deleted = #{deleted}, job = #{job} WHERE id = #{id}")
     void updateStudent(Student student);
 
     @Update("UPDATE students_courses SET course_name = #{courseName} WHERE id = #{id}")

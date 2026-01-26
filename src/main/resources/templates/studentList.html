@@ -19,6 +19,7 @@
         <th>性別</th>
         <th>職業</th>
         <th>備考</th>
+        <th>キャンセル</th>
     </tr>
     </thead>
     <tbody>
@@ -38,6 +39,9 @@
         <td th:text="${studentDetail.student.gender}"></td>
         <td th:text="${studentDetail.student.job}"></td>
         <td th:text="${studentDetail.student.remark}"></td>
+        <td>
+            <input type="checkbox" th:checked="${studentDetail.student.deleted}"/>
+        </td>
     </tr>
     </tbody>
 </table>

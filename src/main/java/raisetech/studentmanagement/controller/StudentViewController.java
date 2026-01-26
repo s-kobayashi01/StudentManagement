@@ -20,14 +20,14 @@ import java.util.Arrays;
 import java.util.List;
 
 @Controller
-public class StudentController {
+public class StudentViewController {
 
     private StudentService service;
     private StudentConverter converter;
-    private static final Logger logger = LoggerFactory.getLogger(StudentController.class);
+    private static final Logger logger = LoggerFactory.getLogger(StudentViewController.class);
 
     @Autowired
-    public StudentController(StudentService service, StudentConverter converter) {
+    public StudentViewController(StudentService service, StudentConverter converter) {
         this.service = service;
         this.converter = converter;
     }
