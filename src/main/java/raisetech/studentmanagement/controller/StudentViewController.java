@@ -10,41 +10,29 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import raisetech.studentmanagement.controller.converter.StudentConverter;
-import raisetech.studentmanagement.data.Student;
 import raisetech.studentmanagement.data.StudentsCourses;
 import raisetech.studentmanagement.domain.StudentDetail;
 import raisetech.studentmanagement.service.StudentService;
 
 import java.util.Arrays;
-import java.util.List;
 
 @Controller
 public class StudentViewController {
 
     private StudentService service;
-    private StudentConverter converter;
     private static final Logger logger = LoggerFactory.getLogger(StudentViewController.class);
 
     @Autowired
-    public StudentViewController(StudentService service, StudentConverter converter) {
+    public StudentViewController(StudentService service) {
         this.service = service;
-        this.converter = converter;
     }
 
     @GetMapping("/studentList")
     public String getStudentList(Model model) {
-        List<Student> students = service.searchStudentList();
-        List<StudentsCourses> studentsCourses = service.searchStudentsCourseList();
-        model.addAttribute("studentList", converter.convertStudentDetails(students, studentsCourses));
+        model.addAttribute("studentList", service.searchStudentList());
         return "studentList";
     }
 
-    @GetMapping("/studentsCourseList")
-    public String getStudentsCourseList(Model model) {
-        model.addAttribute("studentList", service.searchStudentsCourseList());
-        return "studentsCourseList";
-    }
 
     @GetMapping("/student/{id}")
     public String getStudent(@PathVariable Integer id, Model model) {

@@ -4,39 +4,59 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-import raisetech.studentmanagement.controller.converter.StudentConverter;
-import raisetech.studentmanagement.data.Student;
-import raisetech.studentmanagement.data.StudentsCourses;
+import org.springframework.web.bind.annotation.*;
 import raisetech.studentmanagement.domain.StudentDetail;
 import raisetech.studentmanagement.service.StudentService;
 
 import java.util.List;
 
+/**
+ * 受講生の検索や登録、更新などを行うREST APIとして受け付けるControllerです。
+ */
 @RestController
 public class StudentApiController {
 
     private StudentService service;
-    private StudentConverter converter;
+
     private static final Logger logger = LoggerFactory.getLogger(StudentApiController.class);
 
+
     @Autowired
-    public StudentApiController(StudentService service, StudentConverter converter) {
+    public StudentApiController(StudentService service) {
         this.service = service;
-        this.converter = converter;
     }
 
+    /**
+     * 受講生一覧検索です。
+     * 全件検索を行うので、条件指定は行いません。
+     *
+     * @return 受講生一覧（全件）
+     */
     @GetMapping("/api/studentList")
     public List<StudentDetail> getStudentList() {
-        List<Student> students = service.searchStudentList();
-        List<StudentsCourses> studentsCourses = service.searchStudentsCourseList();
-
-        return converter.convertStudentDetails(students, studentsCourses);
+        return service.searchStudentList();
     }
 
+    /**
+     * 受講生検索です。
+     * IDに紐づく任意の受講生の情報を取得します。
+     *
+     * @param id 受講生ID
+     * @return 受講生
+     */
+
+    @GetMapping("/api/student/{id}")
+    public StudentDetail getStudent(@PathVariable Integer id) {
+        return service.searchStudent(id);
+    }
+
+
+    @PostMapping("/api/registerStudent")
+    public ResponseEntity<StudentDetail> registerStudent(@RequestBody StudentDetail studentDetail) {
+
+        StudentDetail resoponseStudentDetail = service.registerStudent(studentDetail);
+        return ResponseEntity.ok(resoponseStudentDetail);
+    }
 
     @PostMapping("/api/updateStudent")
     public ResponseEntity<String> updateStudent(@RequestBody StudentDetail studentDetail) {
