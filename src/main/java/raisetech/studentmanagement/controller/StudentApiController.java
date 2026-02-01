@@ -50,14 +50,24 @@ public class StudentApiController {
         return service.searchStudent(id);
     }
 
-
+    /**
+     * 受講生登録です。
+     *
+     * @param studentDetail 受講生詳細
+     * @return 登録後の受講生情報（採番されたIDを含む）を返却します。
+     */
     @PostMapping("/api/registerStudent")
     public ResponseEntity<StudentDetail> registerStudent(@RequestBody StudentDetail studentDetail) {
-
         StudentDetail resoponseStudentDetail = service.registerStudent(studentDetail);
         return ResponseEntity.ok(resoponseStudentDetail);
     }
 
+    /**
+     * 受講生更新です。
+     *
+     * @param studentDetail 受講生詳細
+     * @return 更新処理が成功しました。とメッセージのレスポンスを返却します。
+     */
     @PostMapping("/api/updateStudent")
     public ResponseEntity<String> updateStudent(@RequestBody StudentDetail studentDetail) {
 
