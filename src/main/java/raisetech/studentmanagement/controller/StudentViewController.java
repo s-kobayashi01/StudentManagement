@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import raisetech.studentmanagement.data.StudentsCourses;
+import raisetech.studentmanagement.data.StudentCourse;
 import raisetech.studentmanagement.domain.StudentDetail;
 import raisetech.studentmanagement.service.StudentService;
 
@@ -70,7 +70,7 @@ public class StudentViewController {
     @GetMapping("/newStudent")
     public String newStudent(Model model) {
         StudentDetail studentDetail = new StudentDetail();
-        studentDetail.setStudentsCourses(Arrays.asList(new StudentsCourses()));
+        studentDetail.setStudentCourseList(Arrays.asList(new StudentCourse()));
         model.addAttribute("studentDetail", studentDetail);
         return "registerStudent";
     }

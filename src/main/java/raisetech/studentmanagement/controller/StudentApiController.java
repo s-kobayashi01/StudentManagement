@@ -27,10 +27,10 @@ public class StudentApiController {
     }
 
     /**
-     * 受講生一覧検索です。
+     * 受講生詳細の一覧検索です。
      * 全件検索を行うので、条件指定は行いません。
      *
-     * @return 受講生一覧（全件）
+     * @return 受講生詳細一覧（全件）
      */
     @GetMapping("/api/studentList")
     public List<StudentDetail> getStudentList() {
@@ -38,7 +38,7 @@ public class StudentApiController {
     }
 
     /**
-     * 受講生検索です。
+     * 受講生詳細の検索です。
      * IDに紐づく任意の受講生の情報を取得します。
      *
      * @param id 受講生ID
@@ -51,10 +51,10 @@ public class StudentApiController {
     }
 
     /**
-     * 受講生登録です。
+     * 受講生詳細の登録です。
      *
      * @param studentDetail 受講生詳細
-     * @return 登録後の受講生情報（採番されたIDを含む）を返却します。
+     * @return 実行結果
      */
     @PostMapping("/api/registerStudent")
     public ResponseEntity<StudentDetail> registerStudent(@RequestBody StudentDetail studentDetail) {
@@ -63,15 +63,13 @@ public class StudentApiController {
     }
 
     /**
-     * 受講生更新です。
+     * 受講生詳細の更新を行います。キャンセルフラグの更新もここで行います。（論理削除）
      *
      * @param studentDetail 受講生詳細
-     * @return 更新処理が成功しました。とメッセージのレスポンスを返却します。
+     * @return 実行結果
      */
-    @PostMapping("/api/updateStudent")
+    @PutMapping("/api/updateStudent")
     public ResponseEntity<String> updateStudent(@RequestBody StudentDetail studentDetail) {
-
-
         service.updateStudent(studentDetail);
         logger.info("update id={}", studentDetail.getStudent().getId());
         return ResponseEntity.ok("更新処理が成功しました。");
