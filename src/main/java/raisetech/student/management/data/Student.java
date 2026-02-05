@@ -26,7 +26,7 @@ public class Student {
     @NotBlank
     private String email;
     private String area;
-    @Min(1)
+    @Min(0)
     @Max(120)
     private int age;
     private String gender;

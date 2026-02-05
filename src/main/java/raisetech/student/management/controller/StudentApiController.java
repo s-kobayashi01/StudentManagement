@@ -73,7 +73,7 @@ public class StudentApiController {
      * @return 実行結果
      */
     @PutMapping("/api/updateStudent")
-    public ResponseEntity<String> updateStudent(@RequestBody StudentDetail studentDetail) {
+    public ResponseEntity<String> updateStudent(@RequestBody @Valid StudentDetail studentDetail) {
         service.updateStudent(studentDetail);
         logger.info("update id={}", studentDetail.getStudent().getId());
         return ResponseEntity.ok("更新処理が成功しました。");
