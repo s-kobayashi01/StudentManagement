@@ -1,18 +1,23 @@
-package raisetech.studentmanagement.controller;
+package raisetech.student.management.controller;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import raisetech.studentmanagement.domain.StudentDetail;
-import raisetech.studentmanagement.service.StudentService;
+import raisetech.student.management.domain.StudentDetail;
+import raisetech.student.management.service.StudentService;
 
 import java.util.List;
 
 /**
  * 受講生の検索や登録、更新などを行うREST APIとして受け付けるControllerです。
  */
+@Validated
 @RestController
 public class StudentApiController {
 
@@ -44,9 +49,8 @@ public class StudentApiController {
      * @param id 受講生ID
      * @return 受講生
      */
-
     @GetMapping("/api/student/{id}")
-    public StudentDetail getStudent(@PathVariable Integer id) {
+    public StudentDetail getStudent(@PathVariable @Min(1) @Max(999) Integer id) {
         return service.searchStudent(id);
     }
 
@@ -57,7 +61,7 @@ public class StudentApiController {
      * @return 実行結果
      */
     @PostMapping("/api/registerStudent")
-    public ResponseEntity<StudentDetail> registerStudent(@RequestBody StudentDetail studentDetail) {
+    public ResponseEntity<StudentDetail> registerStudent(@RequestBody @Valid StudentDetail studentDetail) {
         StudentDetail resoponseStudentDetail = service.registerStudent(studentDetail);
         return ResponseEntity.ok(resoponseStudentDetail);
     }
