@@ -1,15 +1,17 @@
 package raisetech.student.management.controller;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import raisetech.student.management.data.StudentCourse;
 import raisetech.student.management.domain.StudentDetail;
+import raisetech.student.management.exception.TestException;
 import raisetech.student.management.service.StudentService;
 
 import java.util.List;
@@ -38,7 +40,7 @@ public class StudentApiController {
      * @return 受講生詳細一覧（全件）
      */
     @GetMapping("/api/studentList")
-    public List<StudentDetail> getStudentList() {
+    public List<StudentDetail> getStudentList() throws TestException {
         return service.searchStudentList();
     }
 
@@ -50,7 +52,7 @@ public class StudentApiController {
      * @return 受講生
      */
     @GetMapping("/api/student/{id}")
-    public StudentDetail getStudent(@PathVariable @Min(1) @Max(999) Integer id) {
+    public StudentDetail getStudent(@PathVariable @NotBlank @Pattern(regexp = "^\\d+$") Integer id) {
         return service.searchStudent(id);
     }
 
@@ -77,6 +79,17 @@ public class StudentApiController {
         service.updateStudent(studentDetail);
         logger.info("update id={}", studentDetail.getStudent().getId());
         return ResponseEntity.ok("更新処理が成功しました。");
+    }
+
+    /**
+     * 受講生コース情報一覧の検索です。
+     * 実際には例外を発生させるため専用のメソッドとして使用します。
+     *
+     * @return 受講生コース情報一覧（全件）
+     */
+    @GetMapping("/api/searchStudentCourseList")
+    public List<StudentCourse> studentCourseList() throws TestException {
+        throw new TestException("例外を発生させる専用のメソッドです。");
     }
 
 }
