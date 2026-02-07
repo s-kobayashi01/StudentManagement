@@ -103,4 +103,8 @@ public class StudentService {
         studentDetail.getStudentCourseList()
                 .forEach(studentCourse -> repository.updateStudentCourse(studentCourse));
     }
+
+    public List<StudentCourse> searchStudentCourseList() {
+        return repository.searchStudentCourseList();
+    }
 }
