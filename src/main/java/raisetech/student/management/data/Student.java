@@ -34,7 +34,6 @@ public class Student {
     @NotBlank
     private String area;
 
-    @NotBlank
     @Min(0)
     @Max(120)
     private int age;
@@ -42,7 +41,6 @@ public class Student {
     @NotBlank
     private String gender;
 
-    @NotBlank
     private String job;
     private String remark;
     private boolean deleted;

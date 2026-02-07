@@ -1,8 +1,8 @@
 package raisetech.student.management.controller;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +40,7 @@ public class StudentApiController {
      * @return 受講生詳細一覧（全件）
      */
     @GetMapping("/api/studentList")
-    public List<StudentDetail> getStudentList() throws TestException {
+    public List<StudentDetail> getStudentList() {
         return service.searchStudentList();
     }
 
@@ -52,7 +52,7 @@ public class StudentApiController {
      * @return 受講生
      */
     @GetMapping("/api/student/{id}")
-    public StudentDetail getStudent(@PathVariable @NotBlank @Pattern(regexp = "^\\d+$") Integer id) {
+    public StudentDetail getStudent(@PathVariable @Min(1) @Max(999) Integer id) {
         return service.searchStudent(id);
     }
 
