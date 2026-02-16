@@ -19,6 +19,7 @@ import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 import raisetech.student.management.data.StudentCourse;
 import raisetech.student.management.domain.StudentDetail;
+import raisetech.student.management.exception.ApiError;
 import raisetech.student.management.exception.TestException;
 import raisetech.student.management.service.StudentService;
 
@@ -89,7 +90,7 @@ public class StudentApiController {
                     ),
                     @ApiResponse(responseCode = "400", description = "入力エラー",
                             content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = ErrorResponse.class)
+                                    schema = @Schema(implementation = ApiError.class)
                             )
                     ),
 
@@ -137,7 +138,7 @@ public class StudentApiController {
                             description = "入力エラー",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = ErrorResponse.class)
+                                    schema = @Schema(implementation = ApiError.class)
                             )
                     )
             },
