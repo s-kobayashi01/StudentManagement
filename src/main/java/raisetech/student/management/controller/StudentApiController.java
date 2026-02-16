@@ -1,5 +1,12 @@
 package raisetech.student.management.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -8,9 +15,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 import raisetech.student.management.data.StudentCourse;
 import raisetech.student.management.domain.StudentDetail;
+import raisetech.student.management.exception.ApiError;
 import raisetech.student.management.exception.TestException;
 import raisetech.student.management.service.StudentService;
 
@@ -39,6 +48,22 @@ public class StudentApiController {
      *
      * @return 受講生詳細一覧（全件）
      */
+    @Operation(
+            summary = "受講生詳細の一覧検索",
+            description = "受講生詳細の一覧を検索します。全件検索を行うので、条件指定は行いません。",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(
+                                            schema = @Schema(implementation = StudentDetail.class)
+                                    )
+                            )
+                    )
+            }
+    )
     @GetMapping("/api/studentList")
     public List<StudentDetail> getStudentList() {
         return service.searchStudentList();
@@ -51,6 +76,40 @@ public class StudentApiController {
      * @param id 受講生ID
      * @return 受講生
      */
+    @Operation(
+            summary = "受講生詳細の検索",
+            description = "受講生詳細を検索します。IDに紐づく任意の受講生の情報を取得します",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = StudentDetail.class)
+                            )
+                    ),
+                    @ApiResponse(responseCode = "400", description = "入力エラー",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ApiError.class)
+                            )
+                    ),
+
+            },
+            parameters = {
+                    @Parameter(
+                            in = ParameterIn.PATH,
+                            name = "id",
+                            required = true,
+                            description = "受講生ID",
+                            schema = @Schema(
+                                    type = "Integer",
+                                    description = "自動採番されたID",
+                                    example = "50"
+                            )
+
+                    )
+            }
+    )
     @GetMapping("/api/student/{id}")
     public StudentDetail getStudent(@PathVariable @Min(1) @Max(999) Integer id) {
         return service.searchStudent(id);
@@ -62,6 +121,36 @@ public class StudentApiController {
      * @param studentDetail 受講生詳細
      * @return 実行結果
      */
+    @Operation(
+            summary = "受講生詳細の登録",
+            description = "受講生詳細を登録します。",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = StudentDetail.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "入力エラー",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ApiError.class)
+                            )
+                    )
+            },
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "新規登録する受講生詳細　※受講生のid,isDeleted、受講生コース情報のid,studentId,courseStartAt,courseEndAtは自動付与されるためリクエストボディに含まれません",
+                    required = true,
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = StudentDetail.class)
+                    )
+            )
+    )
     @PostMapping("/api/registerStudent")
     public ResponseEntity<StudentDetail> registerStudent(@RequestBody @Valid StudentDetail studentDetail) {
         StudentDetail resoponseStudentDetail = service.registerStudent(studentDetail);
@@ -74,6 +163,35 @@ public class StudentApiController {
      * @param studentDetail 受講生詳細
      * @return 実行結果
      */
+    @Operation(summary = "受講生詳細の更新",
+            description = "キャンセルフラグの更新もここで行います。（論理削除）",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = StudentDetail.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "入力エラー",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorResponse.class)
+                            )
+                    )
+            },
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "更新する受講生詳細",
+                    required = true,
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = StudentDetail.class)
+                    )
+            )
+    )
     @PutMapping("/api/updateStudent")
     public ResponseEntity<String> updateStudent(@RequestBody @Valid StudentDetail studentDetail) {
         service.updateStudent(studentDetail);
@@ -87,6 +205,19 @@ public class StudentApiController {
      *
      * @return 受講生コース情報一覧（全件）
      */
+    @Operation(summary = "受講生コース情報一覧の検索",
+            description = "実際には例外を発生させるため専用のメソッドとして使用します。",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Bad Request(デモ用)",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorResponse.class)
+                            )
+                    )
+            }
+    )
     @GetMapping("/api/searchStudentCourseList")
     public List<StudentCourse> studentCourseList() throws TestException {
         throw new TestException("例外を発生させる専用のメソッドです。");
