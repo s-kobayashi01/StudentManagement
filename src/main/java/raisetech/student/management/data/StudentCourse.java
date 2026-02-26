@@ -18,7 +18,7 @@ public class StudentCourse {
     private Integer id;
 
     @Schema(description = "受講生ID　※StudentのIDに紐づいています。", example = "10")
-    private Integer studentsId;
+    private Integer studentId;
 
     @Schema(description = "コース名", example = "javaコース")
     private String courseName;
