@@ -61,7 +61,7 @@ public class Student {
     private boolean deleted;
 
     public Student(Integer id) {
-        setId(1);
+        this.id = id;
     }
 }
 

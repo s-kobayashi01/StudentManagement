@@ -11,6 +11,7 @@ import raisetech.student.management.repository.StudentRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 受講生情報を取り扱うサービスです。
@@ -52,7 +53,15 @@ public class StudentService {
      */
 
     public StudentDetail searchStudent(Integer id) {
+        if (id == null) {
+            throw new IllegalArgumentException("idがnullです");
+        }
+
         Student student = repository.searchStudent(id);
+        if (student == null) {
+            throw new IllegalArgumentException("該当するstudentが存在しません");
+        }
+
         List<StudentCourse> studentCourse = repository.searchStudentCourse(student.getId());
         return new StudentDetail(student, studentCourse);
 
@@ -67,6 +76,19 @@ public class StudentService {
      */
     @Transactional
     public StudentDetail registerStudent(StudentDetail studentDetail) {
+        if (studentDetail == null) {
+            throw new IllegalArgumentException("studentDetailがnullです");
+        }
+        if (studentDetail.getStudent() == null) {
+            throw new IllegalArgumentException("Studentがnullです");
+        }
+        if (studentDetail.getStudentCourseList() == null) {
+            throw new IllegalArgumentException("StudentCourseListがnullです");
+        }
+        if (studentDetail.getStudentCourseList().stream().anyMatch(Objects::isNull)) {
+            throw new IllegalArgumentException("StudentCourseListにnullが含まれています");
+        }
+
         Student student = studentDetail.getStudent();
 
         repository.registerStudent(student);
@@ -85,7 +107,7 @@ public class StudentService {
      * @param studentCourse 受講生コース情報
      * @param student       受講生
      */
-    void initStudentsCourse(StudentCourse studentCourse, Student student) {
+    private void initStudentsCourse(StudentCourse studentCourse, Student student) {
         LocalDateTime now = LocalDateTime.now();
 
         studentCourse.setStudentId(student.getId());
@@ -99,6 +121,22 @@ public class StudentService {
      * @param studentDetail 受講生詳細
      */
     public void updateStudent(StudentDetail studentDetail) {
+        if (studentDetail == null) {
+            throw new IllegalArgumentException("studentDetailがnullです");
+        }
+        if (studentDetail.getStudent() == null) {
+            throw new IllegalArgumentException("Studentがnullです");
+        }
+        if (studentDetail.getStudentCourseList() == null) {
+            throw new IllegalArgumentException("StudentCourseListがnullです");
+        }
+        if (studentDetail.getStudentCourseList().stream().anyMatch(Objects::isNull)) {
+            throw new IllegalArgumentException("StudentCourseListにnullが含まれています");
+        }
+        if (studentDetail.getStudent().getId() == null) {
+            throw new IllegalArgumentException("idがnullです");
+        }
+
         repository.updateStudent(studentDetail.getStudent());
         studentDetail.getStudentCourseList()
                 .forEach(studentCourse -> repository.updateStudentCourse(studentCourse));
