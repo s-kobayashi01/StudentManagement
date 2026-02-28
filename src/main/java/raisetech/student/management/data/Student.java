@@ -2,7 +2,9 @@ package raisetech.student.management.data;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -11,6 +13,8 @@ import lombok.Setter;
 @Schema(description = "受講生")
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Student {
     @Schema(description = "ID", example = "10")
     private Integer id;
@@ -55,4 +59,9 @@ public class Student {
 
     @Schema(description = "削除フラグ", example = "true")
     private boolean deleted;
+
+    public Student(Integer id) {
+        this.id = id;
+    }
 }
+
