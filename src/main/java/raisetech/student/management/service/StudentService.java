@@ -133,6 +133,9 @@ public class StudentService {
         if (studentDetail.getStudentCourseList().stream().anyMatch(Objects::isNull)) {
             throw new IllegalArgumentException("StudentCourseListにnullが含まれています");
         }
+        if (studentDetail.getStudent().getId() == null) {
+            throw new IllegalArgumentException("idがnullです");
+        }
 
         repository.updateStudent(studentDetail.getStudent());
         studentDetail.getStudentCourseList()

@@ -5,21 +5,22 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import raisetech.student.management.data.Student;
 import raisetech.student.management.data.StudentCourse;
 import raisetech.student.management.domain.StudentDetail;
 import raisetech.student.management.service.StudentService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -31,7 +32,7 @@ class StudentApiControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockitoBean
+    @MockBean
     private StudentService service;
 
     private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
@@ -56,7 +57,15 @@ class StudentApiControllerTest {
 
     @Test
     void 受講生の登録が実行できること() throws Exception {
-        StudentDetail studentDetail = new StudentDetail();
+        Student student = new Student();
+        student.setId(1);
+        student.setName("小林聖");
+        student.setKanaName("コバヤシサトル");
+        student.setNickName("こば");
+        student.setEmail("kobayashi@gmail.com");
+        student.setArea("埼玉県");
+        student.setGender("男");
+        StudentDetail studentDetail = new StudentDetail(student, new ArrayList<>());
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(studentDetail);
         mockMvc.perform(post("/api/registerStudent")
@@ -64,7 +73,12 @@ class StudentApiControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(service, times(1)).registerStudent(any(StudentDetail.class));
+        ArgumentCaptor<StudentDetail> argumentCaptor = ArgumentCaptor.forClass(StudentDetail.class);
+        verify(service, times(1)).registerStudent(argumentCaptor.capture());
+
+        StudentDetail capturedDetail = argumentCaptor.getValue();
+        assertThat(capturedDetail.getStudent().getId()).isEqualTo(1);
+        assertThat(capturedDetail.getStudent().getName()).isEqualTo("小林聖");
     }
 
     @Test
@@ -89,7 +103,13 @@ class StudentApiControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(service, times(1)).updateStudent(any(StudentDetail.class));
+        ArgumentCaptor<StudentDetail> argumentCaptor = ArgumentCaptor.forClass(StudentDetail.class);
+        verify(service, times(1)).updateStudent(argumentCaptor.capture());
+
+        StudentDetail capturedDetail = argumentCaptor.getValue();
+        assertThat(capturedDetail.getStudent().getId()).isEqualTo(1);
+        assertThat(capturedDetail.getStudent().getName()).isEqualTo("小林聖");
+        assertThat(capturedDetail.getStudentCourseList().stream().anyMatch(c -> c.getId().equals(1)));
     }
 
     @Test
