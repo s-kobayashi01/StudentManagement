@@ -41,6 +41,7 @@ public class StudentService {
     public List<StudentDetail> searchStudentList() {
         List<Student> studentList = repository.search();
         List<StudentCourse> studentCourseList = repository.searchStudentCourseList();
+        System.out.println("*** studentCourseList size" + studentCourseList.size());
         return converter.convertStudentDetails(studentList, studentCourseList);
     }
 
@@ -132,9 +133,6 @@ public class StudentService {
         }
         if (studentDetail.getStudentCourseList().stream().anyMatch(Objects::isNull)) {
             throw new IllegalArgumentException("StudentCourseListにnullが含まれています");
-        }
-        if (studentDetail.getStudent().getId() == null) {
-            throw new IllegalArgumentException("idがnullです");
         }
 
         repository.updateStudent(studentDetail.getStudent());

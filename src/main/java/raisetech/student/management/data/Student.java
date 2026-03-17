@@ -17,6 +17,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Student {
     @Schema(description = "ID", example = "10")
+    @NotNull
     private Integer id;
 
     @Schema(description = "氏名", example = "山田太郎")
@@ -26,7 +27,7 @@ public class Student {
 
     @Schema(description = "フリガナ", example = "ヤマダタロウ")
     @NotBlank
-    @Pattern(regexp = "^[ァ-ヶー]+$")
+    @Pattern(regexp = "^[ァ-ヶー]+$", message = "カナ文字のみ入力するようにしてください。")
     private String kanaName;
 
     @Schema(description = "ニックネーム", example = "やまちゃん")

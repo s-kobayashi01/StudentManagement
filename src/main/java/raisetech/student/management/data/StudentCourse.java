@@ -1,6 +1,7 @@
 package raisetech.student.management.data;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 @Setter
 public class StudentCourse {
 
+    @NotNull
     @Schema(description = "ID", example = "20")
     private Integer id;
 

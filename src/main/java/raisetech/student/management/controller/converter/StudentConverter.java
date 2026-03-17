@@ -29,6 +29,7 @@ public class StudentConverter {
             StudentDetail studentDetail = new StudentDetail();
             studentDetail.setStudent(student);
 
+            System.out.println("*** " + studentCourseList.get(0).getStudentId());
             List<StudentCourse> convertStudentCourseList = studentCourseList.stream()
                     .filter(studentsCourse -> student.getId().equals(studentsCourse.getStudentId()))
                     .collect(Collectors.toList());

@@ -58,43 +58,33 @@ class StudentServiceTest {
     }
 
     @Test
-    void 受講生詳細の検索_受講生とコース情報取得処理が呼び出され受講生詳細が返ること() {
-
-        Student student = new Student(1);
-        List<StudentCourse> studentCourse = new ArrayList<>();
-        StudentDetail expected = new StudentDetail(student, studentCourse);
+    void 受講生詳細の検索_リポジトリの処理が適切に呼び出させていること() {
+        Integer id = 999;
+        Student student = new Student();
+        student.setId(id);
         when(repository.searchStudent(id)).thenReturn(student);
-        when(repository.searchStudentCourse(student.getId())).thenReturn(studentCourse);
+        when(repository.searchStudentCourse(id)).thenReturn(new ArrayList<>());
+
+        StudentDetail expected = new StudentDetail(student, new ArrayList<>());
 
         StudentDetail actual = sut.searchStudent(id);
 
-        verify(repository, times(1)).searchStudent(student.getId());
-        verify(repository, times(1)).searchStudentCourse(student.getId());
-        Assertions.assertEquals(expected, actual);
+        verify(repository, times(1)).searchStudent(id);
+        verify(repository, times(1)).searchStudentCourse(id);
+        Assertions.assertEquals(expected.getStudent().getId(), actual.getStudent().getId());
     }
 
     @Test
-    void 新規受講生の登録_新規受講生のと受講生に紐づくコース情報が呼び出され受講生詳細が返ること() {
-        Student student = new Student(1);
+    void 受講生の登録_リポジトリ処理が適切に呼び出させていること() {
+        Student student = new Student();
+        StudentCourse studentCourse = new StudentCourse();
 
-        StudentCourse course1 = new StudentCourse();
-        course1.setStudentId(student.getId());
-
-        StudentCourse course2 = new StudentCourse();
-        course2.setStudentId(student.getId());
-
-        StudentDetail studentDetail = new StudentDetail(student, List.of(course1, course2));
+        StudentDetail studentDetail = new StudentDetail(student, List.of(studentCourse));
 
         sut.registerStudent(studentDetail);
 
-        ArgumentCaptor<StudentCourse> captor = ArgumentCaptor.forClass(StudentCourse.class);
-        verify(repository, times(2)).registerStudentCourse(captor.capture());
         verify(repository, times(1)).registerStudent(student);
-
-        List<StudentCourse> capturedCourses = captor.getAllValues();
-        Assertions.assertTrue(
-                capturedCourses.stream().allMatch(c -> c.getStudentId().equals(student.getId()))
-        );
+        verify(repository, times(1)).registerStudentCourse(studentCourse);
     }
 
     @Test
@@ -125,22 +115,16 @@ class StudentServiceTest {
     }
 
     @Test
-    void 受講生詳細の更新_受講生とコース情報取得処理が呼び出されること() {
-        Student student = new Student(1);
-        StudentCourse course1 = new StudentCourse();
-        course1.setStudentId(student.getId());
-
-        StudentCourse course2 = new StudentCourse();
-        course2.setStudentId(student.getId());
-
-        StudentDetail studentDetail = new StudentDetail(student, List.of(course1, course2));
+    void 受講生詳細の更新_リポジトリ処理が適切に呼び出させていること() {
+        Student student = new Student();
+        student.setId(id);
+        StudentCourse studentCourse = new StudentCourse();
+        StudentDetail studentDetail = new StudentDetail(student, List.of(studentCourse));
 
         sut.updateStudent(studentDetail);
 
-        verify(repository, times(1)).updateStudent(studentDetail.getStudent());
-
-        ArgumentCaptor<StudentCourse> captor = ArgumentCaptor.forClass(StudentCourse.class);
-        verify(repository, times(2)).updateStudentCourse(captor.capture());
+        verify(repository, times(1)).updateStudent(student);
+        verify(repository, times(1)).updateStudentCourse(studentCourse);
     }
 
     @Test

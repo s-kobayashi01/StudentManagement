@@ -1,6 +1,6 @@
 package raisetech.student.management.exception;
 
-public class TestException extends Exception {
+public class TestException extends RuntimeException {
     public TestException() {
         super();
     }
