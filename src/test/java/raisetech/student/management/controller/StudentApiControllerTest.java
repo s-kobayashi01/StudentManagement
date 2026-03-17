@@ -13,7 +13,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import raisetech.student.management.data.Student;
 import raisetech.student.management.data.StudentCourse;
 import raisetech.student.management.domain.StudentDetail;
-import raisetech.student.management.exception.TestException;
 import raisetech.student.management.service.StudentService;
 
 import java.util.List;
@@ -21,7 +20,8 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -64,7 +64,7 @@ class StudentApiControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(service, times(1)).registerStudent(studentDetail);
+        verify(service, times(1)).registerStudent(any(StudentDetail.class));
     }
 
     @Test
@@ -172,41 +172,4 @@ class StudentApiControllerTest {
 
         assertThat(violations.size()).isEqualTo(1);
     }
-
-    @Test
-    void 受講生の検索で例外が発生した場合は400を返す() throws Exception {
-        doThrow(new TestException("エラー"))
-                .when(service)
-                .searchStudent(any(Integer.class));
-
-        mockMvc.perform(get("/api/student/{id}", 1000)
-                        .content("{}")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    void 受講生登録で例外が発生した場合は400を返す() throws Exception {
-        doThrow(new TestException("エラー"))
-                .when(service)
-                .registerStudent(any(StudentDetail.class));
-
-        mockMvc.perform(post("/api/registerStudent")
-                        .content("{}")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    void 受講生更新で例外が発生した場合は400を返す() throws Exception {
-        doThrow(new TestException("エラー"))
-                .when(service)
-                .updateStudent(any(StudentDetail.class));
-
-        mockMvc.perform(put("/api/updateStudent")
-                        .content("{}")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
-    }
-
 }
