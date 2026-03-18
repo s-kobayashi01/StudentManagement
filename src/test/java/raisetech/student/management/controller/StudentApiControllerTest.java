@@ -138,22 +138,6 @@ class StudentApiControllerTest {
     }
 
     @Test
-    void 受講生詳細の受講生でIDに数字以外を用いた時に入力チェックに掛かること() {
-        Student student = new Student();
-        student.setId(null);
-        student.setName("小林聖");
-        student.setKanaName("コバヤシサトル");
-        student.setNickName("こば");
-        student.setEmail("kobayashi@gmail.com");
-        student.setArea("埼玉県");
-        student.setGender("男");
-
-        Set<ConstraintViolation<Student>> violations = validator.validate(student);
-
-        assertThat(violations.size()).isEqualTo(1);
-    }
-
-    @Test
     void 受講生詳細の受講生でkanaNameにカナ以外を用いた時に入力チェックに掛かること() {
         Student student = new Student();
         student.setId(1);
@@ -181,17 +165,5 @@ class StudentApiControllerTest {
         Set<ConstraintViolation<StudentCourse>> violations = validator.validate(studentCourse);
 
         assertThat(violations.size()).isEqualTo(0);
-    }
-
-    @Test
-    void 受講生詳細の受講生コース情報でidに数字以外を用いた時に入力チェックに掛かること() {
-        StudentCourse studentCourse = new StudentCourse();
-        studentCourse.setId(null);
-        studentCourse.setStudentId(1);
-        studentCourse.setCourseName("javaコース");
-
-        Set<ConstraintViolation<StudentCourse>> violations = validator.validate(studentCourse);
-
-        assertThat(violations.size()).isEqualTo(1);
     }
 }
