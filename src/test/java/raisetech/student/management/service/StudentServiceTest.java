@@ -90,7 +90,11 @@ class StudentServiceTest {
 
         ArgumentCaptor<StudentCourse> captor = ArgumentCaptor.forClass(StudentCourse.class);
         verify(repository, times(2)).registerStudentCourse(captor.capture());
-        verify(repository, times(1)).registerStudent(student);
+        ArgumentCaptor<Student> studentCaptor = ArgumentCaptor.forClass(Student.class);
+        verify(repository, times(1)).registerStudent(studentCaptor.capture());
+
+        Student capturedStudent = studentCaptor.getValue();
+        Assertions.assertEquals(student.getId(), capturedStudent.getId());
 
         List<StudentCourse> capturedCourses = captor.getAllValues();
         Assertions.assertTrue(
@@ -138,7 +142,11 @@ class StudentServiceTest {
 
         sut.updateStudent(studentDetail);
 
-        verify(repository, times(1)).updateStudent(studentDetail.getStudent());
+        ArgumentCaptor<Student> studentCaptor = ArgumentCaptor.forClass(Student.class);
+        verify(repository, times(1)).updateStudent(studentCaptor.capture());
+
+        Student capturedStudent = studentCaptor.getValue();
+        Assertions.assertEquals(student.getId(), capturedStudent.getId());
 
         ArgumentCaptor<StudentCourse> captor = ArgumentCaptor.forClass(StudentCourse.class);
         verify(repository, times(2)).updateStudentCourse(captor.capture());
