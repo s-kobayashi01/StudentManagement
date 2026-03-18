@@ -16,8 +16,18 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Student {
+
+    public Student(Integer id, String name, String kanaName, String nickName, String email, String area, String gender) {
+        this.id = id;
+        this.name = name;
+        this.kanaName = kanaName;
+        this.nickName = nickName;
+        this.email = email;
+        this.area = area;
+        this.gender = gender;
+    }
+
     @Schema(description = "ID", example = "10")
-    @NotNull
     private Integer id;
 
     @Schema(description = "氏名", example = "山田太郎")

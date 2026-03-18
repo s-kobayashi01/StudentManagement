@@ -76,15 +76,26 @@ class StudentServiceTest {
 
     @Test
     void 受講生の登録_リポジトリ処理が適切に呼び出させていること() {
-        Student student = new Student();
-        StudentCourse studentCourse = new StudentCourse();
+        Student student = new Student(1);
 
-        StudentDetail studentDetail = new StudentDetail(student, List.of(studentCourse));
+        StudentCourse course1 = new StudentCourse();
+        course1.setStudentId(student.getId());
+
+        StudentCourse course2 = new StudentCourse();
+        course2.setStudentId(student.getId());
+
+        StudentDetail studentDetail = new StudentDetail(student, List.of(course1, course2));
 
         sut.registerStudent(studentDetail);
 
+        ArgumentCaptor<StudentCourse> captor = ArgumentCaptor.forClass(StudentCourse.class);
+        verify(repository, times(2)).registerStudentCourse(captor.capture());
         verify(repository, times(1)).registerStudent(student);
-        verify(repository, times(1)).registerStudentCourse(studentCourse);
+
+        List<StudentCourse> capturedCourses = captor.getAllValues();
+        Assertions.assertTrue(
+                capturedCourses.stream().allMatch(c -> c.getStudentId().equals(student.getId()))
+        );
     }
 
     @Test
@@ -116,15 +127,21 @@ class StudentServiceTest {
 
     @Test
     void 受講生詳細の更新_リポジトリ処理が適切に呼び出させていること() {
-        Student student = new Student();
-        student.setId(id);
-        StudentCourse studentCourse = new StudentCourse();
-        StudentDetail studentDetail = new StudentDetail(student, List.of(studentCourse));
+        Student student = new Student(1);
+        StudentCourse course1 = new StudentCourse();
+        course1.setStudentId(student.getId());
+
+        StudentCourse course2 = new StudentCourse();
+        course2.setStudentId(student.getId());
+
+        StudentDetail studentDetail = new StudentDetail(student, List.of(course1, course2));
 
         sut.updateStudent(studentDetail);
 
-        verify(repository, times(1)).updateStudent(student);
-        verify(repository, times(1)).updateStudentCourse(studentCourse);
+        verify(repository, times(1)).updateStudent(studentDetail.getStudent());
+
+        ArgumentCaptor<StudentCourse> captor = ArgumentCaptor.forClass(StudentCourse.class);
+        verify(repository, times(2)).updateStudentCourse(captor.capture());
     }
 
     @Test

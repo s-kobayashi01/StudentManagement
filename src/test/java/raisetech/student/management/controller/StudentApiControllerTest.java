@@ -57,14 +57,15 @@ class StudentApiControllerTest {
 
     @Test
     void 受講生の登録が実行できること() throws Exception {
-        Student student = new Student();
-        student.setId(1);
-        student.setName("小林聖");
-        student.setKanaName("コバヤシサトル");
-        student.setNickName("こば");
-        student.setEmail("kobayashi@gmail.com");
-        student.setArea("埼玉県");
-        student.setGender("男");
+        Student student = new Student(
+                1,
+                "小林聖",
+                "コバヤシサトル",
+                "こば",
+                "kobayashi@gmail.com",
+                "埼玉県",
+                "男"
+        );
         StudentDetail studentDetail = new StudentDetail(student, new ArrayList<>());
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(studentDetail);
@@ -83,14 +84,15 @@ class StudentApiControllerTest {
 
     @Test
     void 受講生の更新が実行できること() throws Exception {
-        Student student = new Student();
-        student.setId(1);
-        student.setName("小林聖");
-        student.setKanaName("コバヤシサトル");
-        student.setNickName("こば");
-        student.setEmail("kobayashi@gmail.com");
-        student.setArea("埼玉県");
-        student.setGender("男");
+        Student student = new Student(
+                1,
+                "小林聖",
+                "コバヤシサトル",
+                "こば",
+                "kobayashi@gmail.com",
+                "埼玉県",
+                "男"
+        );
         StudentCourse studentCourse = new StudentCourse();
         studentCourse.setStudentId(1);
         studentCourse.setId(1);
@@ -109,7 +111,7 @@ class StudentApiControllerTest {
         StudentDetail capturedDetail = argumentCaptor.getValue();
         assertThat(capturedDetail.getStudent().getId()).isEqualTo(1);
         assertThat(capturedDetail.getStudent().getName()).isEqualTo("小林聖");
-        assertThat(capturedDetail.getStudentCourseList().stream().anyMatch(c -> c.getId().equals(1)));
+        assertThat(capturedDetail.getStudentCourseList().stream().anyMatch(c -> c.getId().equals(1))).isTrue();
     }
 
     @Test
