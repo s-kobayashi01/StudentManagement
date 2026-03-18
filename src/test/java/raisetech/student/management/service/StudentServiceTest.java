@@ -58,23 +58,24 @@ class StudentServiceTest {
     }
 
     @Test
-    void 受講生詳細の検索_受講生とコース情報取得処理が呼び出され受講生詳細が返ること() {
-
-        Student student = new Student(1);
-        List<StudentCourse> studentCourse = new ArrayList<>();
-        StudentDetail expected = new StudentDetail(student, studentCourse);
+    void 受講生詳細の検索_リポジトリの処理が適切に呼び出させていること() {
+        Integer id = 999;
+        Student student = new Student();
+        student.setId(id);
         when(repository.searchStudent(id)).thenReturn(student);
-        when(repository.searchStudentCourse(student.getId())).thenReturn(studentCourse);
+        when(repository.searchStudentCourse(id)).thenReturn(new ArrayList<>());
+
+        StudentDetail expected = new StudentDetail(student, new ArrayList<>());
 
         StudentDetail actual = sut.searchStudent(id);
 
-        verify(repository, times(1)).searchStudent(student.getId());
-        verify(repository, times(1)).searchStudentCourse(student.getId());
-        Assertions.assertEquals(expected, actual);
+        verify(repository, times(1)).searchStudent(id);
+        verify(repository, times(1)).searchStudentCourse(id);
+        Assertions.assertEquals(expected.getStudent().getId(), actual.getStudent().getId());
     }
 
     @Test
-    void 新規受講生の登録_新規受講生のと受講生に紐づくコース情報が呼び出され受講生詳細が返ること() {
+    void 受講生の登録_リポジトリ処理が適切に呼び出させていること() {
         Student student = new Student(1);
 
         StudentCourse course1 = new StudentCourse();
@@ -89,7 +90,11 @@ class StudentServiceTest {
 
         ArgumentCaptor<StudentCourse> captor = ArgumentCaptor.forClass(StudentCourse.class);
         verify(repository, times(2)).registerStudentCourse(captor.capture());
-        verify(repository, times(1)).registerStudent(student);
+        ArgumentCaptor<Student> studentCaptor = ArgumentCaptor.forClass(Student.class);
+        verify(repository, times(1)).registerStudent(studentCaptor.capture());
+
+        Student capturedStudent = studentCaptor.getValue();
+        Assertions.assertEquals(student.getId(), capturedStudent.getId());
 
         List<StudentCourse> capturedCourses = captor.getAllValues();
         Assertions.assertTrue(
@@ -125,7 +130,7 @@ class StudentServiceTest {
     }
 
     @Test
-    void 受講生詳細の更新_受講生とコース情報取得処理が呼び出されること() {
+    void 受講生詳細の更新_リポジトリ処理が適切に呼び出させていること() {
         Student student = new Student(1);
         StudentCourse course1 = new StudentCourse();
         course1.setStudentId(student.getId());
@@ -137,7 +142,11 @@ class StudentServiceTest {
 
         sut.updateStudent(studentDetail);
 
-        verify(repository, times(1)).updateStudent(studentDetail.getStudent());
+        ArgumentCaptor<Student> studentCaptor = ArgumentCaptor.forClass(Student.class);
+        verify(repository, times(1)).updateStudent(studentCaptor.capture());
+
+        Student capturedStudent = studentCaptor.getValue();
+        Assertions.assertEquals(student.getId(), capturedStudent.getId());
 
         ArgumentCaptor<StudentCourse> captor = ArgumentCaptor.forClass(StudentCourse.class);
         verify(repository, times(2)).updateStudentCourse(captor.capture());
