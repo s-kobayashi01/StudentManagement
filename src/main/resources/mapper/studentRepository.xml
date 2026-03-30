@@ -16,7 +16,13 @@
 
     <!-- 受講生コース情報の全件検索 -->
     <select id="searchStudentCourseList" resultType="raisetech.student.management.data.StudentCourse">
-        SELECT * FROM students_courses
+        SELECT
+        id,
+        students_id AS studentId,
+        course_name AS courseName,
+        course_start_at AS courseStartAt,
+        course_end_at AS courseEndAt
+        FROM students_courses
     </select>
 
     <!-- 受講生コース情報の検索 -->
@@ -31,7 +37,7 @@
     </insert>
     <!-- 受講生コース情報の登録 -->
     <insert id="registerStudentCourse" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO students_courses (students_id, course_name, course_start_at, course_end_at) values (#{studentsId},
+        INSERT INTO students_courses (students_id, course_name, course_start_at, course_end_at) values (#{studentId},
         #{courseName}, #{courseStartAt}, #{courseEndAt})
     </insert>
 
