@@ -5,7 +5,7 @@ VALUES ('小林聖', 'ｺﾊﾞﾔｼｻﾄﾙ', 'こばやし', 'kobayashi@gmai
        ('河村智康', 'ｶﾜﾑﾗﾉﾘﾔｽ', 'カースケ', 'kawamura@gmail.com', '東京都', 65, '男', 'ドラマー'),
        ('椎名林檎', 'ｼｲﾅﾘﾝｺﾞ', 'りんご', 'ringo@gmail.com', '福岡県', 47, '女', 'ミュージシャン');
 
-INSERT INTO students_courses (students_ID, course_name, course_start_at, course_end_at)
+INSERT INTO students_courses (students_id, course_name, course_start_at, course_end_at)
 VALUES (1, 'Javaコース', '2025-11-11 12:00:00', '2026-07-07 23:59:59'),
        (2, 'AWSコース', '2025-12-25 13:50:00', '2026-06-25 23:59:59'),
        (3, 'Javaコース', '2026-01-08 17:00:00', '2026-07-08 23:59:59'),
